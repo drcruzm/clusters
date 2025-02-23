@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>cluster4 | Dr.Cruz</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/post/">Post</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/post/2025/02/21/cluster1">Clusters</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">cluster4</span></h1>
+<h2 class="author">Dr.Cruz</h2>
+<h2 class="date">2025/02/21</h2>
+</div>
+
+<main>
+<p>código completo en R para realizar un análisis
+de cluster por k-means en el dataset &ldquo;usa-cars&rdquo;,
+incluyendo la normalización de las variables.</p>
+<h2 id="1-cargar-el-dataset">1. Cargar el dataset</h2>
+<pre><code class="language-r">datos &lt;- read.csv(&quot;USA_cars_datasets.csv&quot;)
+
+# 2. Seleccionar las variables numéricas para el clustering
+# Aquí seleccionamos 'price', 'mileage' y 'year'; modifica según tu dataset
+variables_cluster &lt;- datos[, c(&quot;price&quot;, &quot;mileage&quot;, &quot;year&quot;)]
+
+# 3. Normalizar las variables
+# Usamos scale() para estandarizar las variables (media 0, desviación estándar 1)
+variables_normalizadas &lt;- scale(variables_cluster)
+
+# 4. Método del codo para determinar el número óptimo de clusters
+set.seed(123)  # Para reproducibilidad
+wcss &lt;- vector()  # Vector para almacenar la suma de cuadrados dentro de los clusters
+for (i in 1:10) {
+  kmeans_model &lt;- kmeans(variables_normalizadas, centers = i, nstart = 10)
+  wcss[i] &lt;- kmeans_model$tot.withinss
+}
+
+# Graficar el método del codo
+plot(1:10, wcss, type = &quot;b&quot;, pch = 19, frame = FALSE, 
+     xlab = &quot;Número de clusters&quot;, ylab = &quot;WCSS (Within-Cluster Sum of Squares)&quot;)
+</code></pre>
+<img src="/post/2025/02/21/cluster4/index_files/figure-html/unnamed-chunk-1-1.png" width="672" />
+<pre><code class="language-r"># 5. Aplicar k-means (suponiendo que 3 clusters es el número óptimo)
+</code></pre>
+<pre><code class="language-r">set.seed(123)  # Para reproducibilidad
+kmeans_result &lt;- kmeans(variables_normalizadas, centers = 3, nstart = 25)
+
+# 6. Visualizar los clusters usando PCA
+# Realizamos un análisis de componentes principales (PCA) para graficar
+</code></pre>
+<pre><code class="language-r">pca_result &lt;- prcomp(variables_normalizadas, scale. = FALSE)
+plot(pca_result$x[,1], pca_result$x[,2], col = kmeans_result$cluster, 
+     pch = 19, xlab = &quot;Componente Principal 1&quot;, ylab = &quot;Componente Principal 2&quot;)
+
+points(kmeans_result$centers %*% pca_result$rotation[,1:2], col = 1:3, pch = 3, cex = 2)
+</code></pre>
+<img src="/post/2025/02/21/cluster4/index_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<pre><code class="language-r"># 7. Mostrar los centroides de los clusters
+print(kmeans_result$centers)
+</code></pre>
+<pre><code>##        price     mileage       year
+## 1  1.0622743 -0.43312448  0.4299743
+## 2 -0.4544278 -0.09571377  0.1457798
+## 3 -1.1525411  1.79747607 -2.0242227
+</code></pre>
+<pre><code class="language-r"># 8. Agregar la asignación de clusters al dataset original
+datos$cluster &lt;- kmeans_result$cluster
+</code></pre>
+<h1 id="cargar-las-librerías-necesarias">Cargar las librerías necesarias</h1>
+<pre><code class="language-r">library(ggplot2)    # Para visualización personalizada
+library(factoextra) # Para visualización de clusters y método del codo
+</code></pre>
+<pre><code>## Warning: package 'factoextra' was built under R version 4.4.2
+</code></pre>
+<pre><code>## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
+</code></pre>
+<pre><code class="language-r"># 1. Cargar el dataset
+data &lt;- read.csv(&quot;USA_cars_datasets.csv&quot;)
+</code></pre>
+<pre><code class="language-r"># 2. Seleccionar variables numéricas para el clustering
+# Supongamos que las columnas relevantes son 'price', 'mileage', 'year', etc.
+# Ajusta los números de columnas según el dataset real (por ejemplo, 2:5).
+data_num &lt;- data[, c(&quot;price&quot;, &quot;mileage&quot;, &quot;year&quot;)]  # Ejemplo, ajusta según tu dataset
+# Si no sabes qué columnas usar, inspecciona el dataset con str(data)
+
+# 3. Normalizar las variables (restar la media y dividir por la desviación estándar)
+data_scaled &lt;- scale(data_num)
+</code></pre>
+<pre><code class="language-r"># 4. Determinar el número óptimo de clusters con el método del codo
+fviz_nbclust(data_scaled, kmeans, method = &quot;wss&quot;) +
+  labs(title = &quot;Método del Codo para Determinar k&quot;)
+</code></pre>
+<img src="/post/2025/02/21/cluster4/index_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+<pre><code class="language-r"># 5. Realizar el clustering con k-means
+# Supongamos que elegimos k = 3 después de ver la gráfica del codo
+set.seed(123)  # Para reproducibilidad
+km &lt;- kmeans(data_scaled, centers = 3, nstart = 25)  # nstart mejora la estabilidad
+</code></pre>
+<pre><code class="language-r"># 6. Visualizar los clusters con factoextra
+fviz_cluster(km, data = data_scaled, geom = &quot;point&quot;, 
+             main = &quot;Clusters de K-means con PCA&quot;) +
+  theme_minimal()
+</code></pre>
+<img src="/post/2025/02/21/cluster4/index_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<pre><code class="language-r"># 7. Añadir los clusters al dataset original para visualización personalizada
+data$cluster &lt;- as.factor(km$cluster)
+</code></pre>
+<pre><code class="language-r"># 8. Visualizar con ggplot2 (ejemplo: price vs mileage)
+ggplot(data, aes(x = price, y = mileage, color = cluster)) +
+  geom_point(size = 2) +  # Tamaño de los puntos
+  theme_minimal() +
+  labs(title = &quot;Clusters de K-means&quot;, 
+       x = &quot;Precio&quot;, 
+       y = &quot;Kilometraje&quot;, 
+       color = &quot;Cluster&quot;) +
+  scale_color_brewer(palette = &quot;Set1&quot;)  # Colores diferenciados
+</code></pre>
+<img src="/post/2025/02/21/cluster4/index_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+
+</main>
+
+  <footer>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/math-code.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/katex.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/render-katex.js" defer></script>
+
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js" defer></script>
+
+  
+  <hr/>
+  © <a href="https://yihui.org">Dr. Victor Cruz</a> 2024 &ndash; 2025 | <a href="https://github.com/yihui">Github</a> | <a href="https://twitter.com/xieyihui">Twitter</a>
+  
+  </footer>
+  </body>
+</html>
+

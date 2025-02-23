@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ClusterBoxplot | Dr.Cruz</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/post/">Post</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/post/2025/02/21/cluster1">Clusters</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">ClusterBoxplot</span></h1>
+
+
+</div>
+
+<main>
+<h2 id="boxplox-from-clusters">Boxplox from Clusters</h2>
+<h2 id="cargar-las-librerías-necesarias">Cargar las librerías necesarias</h2>
+<pre><code class="language-r">suppressWarnings(suppressMessages(library(reshape2)))
+suppressWarnings(suppressMessages(library(dplyr)))
+suppressWarnings(suppressMessages(library(factoextra)))
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+</code></pre>
+<pre><code class="language-r">datos &lt;- read.csv(&quot;USA_cars_datasets.csv&quot;)
+#attach(datos)
+# str(data)
+</code></pre>
+<pre><code class="language-r">variables_cluster &lt;- datos[, c(&quot;price&quot;, &quot;mileage&quot;, &quot;year&quot;)]
+</code></pre>
+<h2 id="eliminar-filas-con-ceros-en-price-mileage-o-year">Eliminar filas con ceros en Price, mileage o year</h2>
+<pre><code class="language-r">datos_filtrados &lt;- variables_cluster %&gt;%
+  filter(price &gt; 0, mileage &gt; 0, year &gt; 0, price &gt;= 2000, year &gt;= 2015, price &lt; 60000)
+</code></pre>
+<pre><code class="language-r">datos_normalizados &lt;- scale(datos_filtrados)
+</code></pre>
+<h2 id="convertir-a-dataframe-para-facilitar-el-manejo-posterior-opcional">Convertir a dataframe para facilitar el manejo posterior (opcional)</h2>
+<pre><code class="language-r">datos_normalizados &lt;- as.data.frame(datos_normalizados)
+</code></pre>
+<h2 id="6-realizar-el-análisis-de-cluster-k-means">6. Realizar el análisis de cluster K-means</h2>
+<h3 id="fijamos-una-semilla-para-la-reproducibilidad-de-los-resultados">Fijamos una semilla para la reproducibilidad de los resultados</h3>
+<pre><code class="language-r">set.seed(123)
+</code></pre>
+<h2 id="kmeans">Kmeans</h2>
+<h3 id="nstart--25-intenta-25-configuraciones-iniciales-aleatorias-y-elige-la-mejor">nstart = 25 intenta 25 configuraciones iniciales aleatorias y elige la mejor.</h3>
+<pre><code class="language-r">kmeans_result &lt;- kmeans(datos_normalizados, centers = 3, nstart = 25)
+</code></pre>
+<h2 id="7-añadir-los-clusters-al-dataset-filtrado-original-para-análisis-posterior">7. Añadir los clusters al dataset filtrado original (para análisis posterior)</h2>
+<pre><code class="language-r">datos_filtrados$cluster &lt;- kmeans_result$cluster
+</code></pre>
+<pre><code class="language-r">ggplot(datos_filtrados) + aes(x = cluster, y = price, fill = factor(cluster)) + geom_boxplot() + theme_minimal() +
+  labs(title = &quot;Distribución de Precio por Cluster&quot;, 
+       x = &quot;Cluster&quot;, 
+       y = &quot;Precio&quot;) + theme(legend.position = &quot;none&quot;)  # Opcional: quitar la leyenda
+</code></pre>
+<img src="/post/1/01/01/clusterboxplot/index_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<pre><code class="language-r"># 2. Boxplot para 'mileage' vs clusters
+ggplot(datos_filtrados, aes(x = cluster, y = mileage, fill = factor(cluster))) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = &quot;Distribución de Kilometraje por Cluster&quot;, 
+       x = &quot;Cluster&quot;, 
+       y = &quot;Kilometraje&quot;) +
+  scale_fill_brewer(palette = &quot;Set1&quot;) +
+  theme(legend.position = &quot;none&quot;)
+</code></pre>
+<img src="/post/1/01/01/clusterboxplot/index_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+<pre><code class="language-r"># 3. Boxplot para 'year' vs clusters
+ggplot(datos_filtrados, aes(x = cluster, y = year, fill = factor(cluster))) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = &quot;Distribución de Año por Cluster&quot;, 
+       x = &quot;Cluster&quot;, 
+       y = &quot;Año&quot;) +
+  scale_fill_brewer(palette = &quot;Set1&quot;) +
+  theme(legend.position = &quot;none&quot;)
+</code></pre>
+<img src="/post/1/01/01/clusterboxplot/index_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<pre><code class="language-r"># (Opcional) Combinar todos en una sola figura con facet_wrap
+data_long &lt;- melt(datos_filtrados, id.vars = &quot;cluster&quot;, measure.vars = c(&quot;price&quot;,&quot;mileage&quot;, &quot;year&quot;))
+</code></pre>
+<pre><code class="language-r">ggplot(data_long, aes(x = cluster, y = value, fill = factor(cluster))) +
+  geom_boxplot() +
+  facet_wrap(~variable, scales = &quot;free_y&quot;) +  # Escalas libres para cada variable
+  theme_minimal() +
+  labs(title = &quot;Distribución de Variables por Cluster&quot;, 
+       x = &quot;Cluster&quot;, 
+       y = &quot;Valor&quot;) +
+  scale_fill_brewer(palette = &quot;Set1&quot;) +
+  theme(legend.position = &quot;none&quot;)
+</code></pre>
+<img src="/post/1/01/01/clusterboxplot/index_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+<h2 id="análisis-por-variable-y-cluster"><strong>Análisis por Variable y Cluster</strong>:</h2>
+<ul>
+<li><strong>Panel de <code>price</code></strong>: Observa cuál cluster tiene la mediana más baja y menor dispersión (caja más pequeña). Un cluster con precios bajos y consistentes podría indicar autos más económicos.</li>
+<li><strong>Panel de <code>mileage</code></strong>: Busca el cluster con la mediana más baja en kilometraje y pocos valores atípicos altos. Esto sugiere autos con poco uso.</li>
+<li><strong>Panel de <code>year</code></strong>: Identifica el cluster con la mediana más alta (años más recientes) y una caja que no baje demasiado (evitar modelos muy antiguos).</li>
+</ul>
+<ol start="4">
+<li>
+<p><strong>Selección del &ldquo;Mejor&rdquo; Cluster</strong>:</p>
+<ul>
+<li>Compara los boxplots entre clusters para encontrar uno que optimice las tres variables según tus prioridades.</li>
+<li>Por ejemplo:
+<ul>
+<li>Si el <strong>Cluster 1</strong> tiene precios bajos pero años antiguos y alto kilometraje, podría ser autos baratos pero desgastados.</li>
+<li>Si el <strong>Cluster 2</strong> tiene años recientes, kilometraje bajo pero precios altos, podría ser autos premium nuevos.</li>
+<li>Si el <strong>Cluster 3</strong> tiene un balance (precio moderado, kilometraje bajo, años relativamente recientes), podría ser el &ldquo;mejor&rdquo; para un comprador promedio.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Ejemplo Práctico</strong>:
+Supongamos que la gráfica muestra:</p>
+<ul>
+<li>
+<p><strong>Cluster 1</strong>: Precio mediano $10,000, kilometraje 150,000 millas, año 2010.</p>
+</li>
+<li>
+<p><strong>Cluster 2</strong>: Precio mediano $30,000, kilometraje 20,000 millas, año 2020.</p>
+</li>
+<li>
+<p><strong>Cluster 3</strong>: Precio mediano $18,000, kilometraje 80,000 millas, año 2018.</p>
+</li>
+<li>
+<p>Si priorizas <strong>costo</strong>, el Cluster 1 es atractivo, pero los autos son viejos y usados.</p>
+</li>
+<li>
+<p>Si buscas <strong>calidad reciente</strong>, el Cluster 2 es ideal, pero caro.</p>
+</li>
+<li>
+<p>Si quieres un <strong>balance</strong>, el Cluster 3 ofrece autos razonablemente nuevos y usados a un precio intermedio, siendo probablemente la mejor opción para &ldquo;mejores características&rdquo; generales.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="explicación-para-presentar">Explicación para Presentar</h3>
+<p>Podrías decir algo como:</p>
+<blockquote>
+<p>&ldquo;La gráfica de boxplots generada con <code>facet_wrap</code> nos permite comparar los clusters de autos según precio, kilometraje y año. Cada panel muestra cómo se distribuyen estas variables en los grupos identificados por k-means. Para seleccionar autos con las mejores características —definidas como bajo precio, bajo kilometraje y años recientes— observamos que el Cluster X (ajusta según tus datos) ofrece un buen equilibrio: precios moderados, kilometraje razonable y modelos relativamente nuevos. Esto lo hace ideal para compradores que buscan calidad sin pagar de más, mientras que otros clusters podrían destacar en precio bajo (Cluster Y) o autos casi nuevos (Cluster Z), dependiendo de las prioridades.&rdquo;</p></blockquote>
+
+</main>
+
+  <footer>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/math-code.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/katex.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/render-katex.js" defer></script>
+
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js" defer></script>
+
+  
+  <hr/>
+  © <a href="https://yihui.org">Dr. Victor Cruz</a> 2024 &ndash; 2025 | <a href="https://github.com/yihui">Github</a> | <a href="https://twitter.com/xieyihui">Twitter</a>
+  
+  </footer>
+  </body>
+</html>
+

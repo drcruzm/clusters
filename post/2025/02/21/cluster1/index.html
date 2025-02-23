@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cluster1-PCA | Dr.Cruz</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/post/">Post</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/post/2025/02/21/cluster1">Clusters</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Cluster1-PCA</span></h1>
+<h2 class="author">Dr.Victor Cruz</h2>
+<h2 class="date">2025/02/21</h2>
+</div>
+
+<main>
+<h2 id="cargar-las-librerías-necesarias">Cargar las librerías necesarias</h2>
+<pre><code class="language-r">suppressWarnings(suppressMessages(library(dplyr)))
+suppressWarnings(suppressMessages(library(factoextra)))
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(factoextra)
+</code></pre>
+<h2 id="cargar-el-archivo-csv">Cargar el archivo CSV</h2>
+<pre><code class="language-r">data &lt;- read.csv(&quot;USA_cars_datasets.csv&quot;)
+</code></pre>
+<h2 id="seleccionar-las-variables-numéricas-para-el-análisis-de-clúster">Seleccionar las variables numéricas para el análisis de clúster</h2>
+<pre><code class="language-r">datos &lt;- data %&gt;% select(price, year, mileage)
+</code></pre>
+<h2 id="eliminar-filas-con-ceros-en-price-mileage-o-year">Eliminar filas con ceros en Price, mileage o year</h2>
+<pre><code class="language-r">datos_filtrados &lt;- datos %&gt;%
+  filter(price &gt; 0, mileage &gt; 0, year &gt; 0, price &gt;= 2000, year &gt;= 2015)
+</code></pre>
+<h2 id="verificar-cuántos-registros-se-eliminaron">Verificar cuántos registros se eliminaron</h2>
+<pre><code class="language-r">cat(&quot;Registros originales:&quot;, nrow(datos), &quot;\n&quot;)
+</code></pre>
+<pre><code>## Registros originales: 2499
+</code></pre>
+<pre><code class="language-r">cat(&quot;Registros después del filtrado:&quot;, nrow(datos_filtrados), &quot;\n&quot;)
+</code></pre>
+<pre><code>## Registros después del filtrado: 2101
+</code></pre>
+<h2 id="5-normalizar-las-variables">5. Normalizar las variables</h2>
+<h3 id="usamos-la-normalización-z-score-estandarización-para-que-las-variables">Usamos la normalización Z-score (estandarización) para que las variables</h3>
+<h3 id="tengan-media-0-y-desviación-estándar-1">tengan media 0 y desviación estándar 1.</h3>
+<pre><code class="language-r">datos_normalizados &lt;- scale(datos_filtrados)
+</code></pre>
+<h2 id="convertir-a-dataframe-para-facilitar-el-manejo-posterior-opcional">Convertir a dataframe para facilitar el manejo posterior (opcional)</h2>
+<pre><code class="language-r">datos_normalizados &lt;- as.data.frame(datos_normalizados)
+</code></pre>
+<h2 id="6-realizar-el-análisis-de-cluster-k-means">6. Realizar el análisis de cluster K-means</h2>
+<h3 id="fijamos-una-semilla-para-la-reproducibilidad-de-los-resultados">Fijamos una semilla para la reproducibilidad de los resultados</h3>
+<pre><code class="language-r">set.seed(123)
+</code></pre>
+<h2 id="kmeans">Kmeans</h2>
+<h3 id="nstart--25-intenta-25-configuraciones-iniciales-aleatorias-y-elige-la-mejor">nstart = 25 intenta 25 configuraciones iniciales aleatorias y elige la mejor.</h3>
+<pre><code class="language-r">kmeans_result &lt;- kmeans(datos_normalizados, centers = 3, nstart = 25)
+</code></pre>
+<h2 id="7-añadir-los-clusters-al-dataset-filtrado-original-para-análisis-posterior">7. Añadir los clusters al dataset filtrado original (para análisis posterior)</h2>
+<pre><code class="language-r">datos_filtrados$cluster &lt;- kmeans_result$cluster
+</code></pre>
+<h2 id="8-visualizar-los-clusters-opcional-pero-muy-recomendable">8. Visualizar los clusters (opcional pero muy recomendable)</h2>
+<pre><code>  Usamos fviz_cluster de factoextra para una visualización rápida
+</code></pre>
+<pre><code class="language-r">fviz_cluster(kmeans_result, data = datos_normalizados,
+             geom = &quot;point&quot;,  ## Mostrar puntos
+             ellipse.type = &quot;euclid&quot;, ## Elipse de confianza
+             palette = &quot;jco&quot;, ## Paleta de colores
+             ggtheme = theme_minimal()) ## Tema minimalista
+</code></pre>
+<img src="/post/2025/02/21/cluster1/index_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+
+</main>
+
+  <footer>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/math-code.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/katex.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/render-katex.js" defer></script>
+
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js" defer></script>
+
+  
+  <hr/>
+  © <a href="https://yihui.org">Dr. Victor Cruz</a> 2024 &ndash; 2025 | <a href="https://github.com/yihui">Github</a> | <a href="https://twitter.com/xieyihui">Twitter</a>
+  
+  </footer>
+  </body>
+</html>
+

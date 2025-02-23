@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Notes on Dr.Cruz</title>
+    <link>http://localhost:4321/note/</link>
+    <description>Recent content in Notes on Dr.Cruz</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 23 Feb 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Videos </title>
+      <link>http://localhost:4321/note/2025/02/23/videos/</link>
+      <pubDate>Sun, 23 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/note/2025/02/23/videos/</guid>
+      <description>&lt;h2 id=&#34;videos-youtube&#34;&gt;Videos youtube&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=dQw4w9WgXcQ&#34;&gt;&lt;img src=&#34;https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg&#34; alt=&#34;Rick Astley - Never Gonna Give You Up&#34;&gt;&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=BEoGvTlJMyY&#34;&gt;&lt;img src=&#34;https://img.youtube.com/vi/BEoGvTlJMyY/0.jpg&#34; alt=&#34;Sabrina concert&#34;&gt;&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=y38qQRg3UDI&#34;&gt;&lt;img src=&#34;https://img.youtube.com/vi/y38qQRg3UDI/0.jpg&#34; alt=&#34;Dua Lipa concert&#34;&gt;&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Cluster3</title>
+      <link>http://localhost:4321/note/2025/02/21/cluster3/</link>
+      <pubDate>Fri, 21 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/note/2025/02/21/cluster3/</guid>
+      <description>&lt;p&gt;código completo en R para realizar un análisis&#xA;de cluster por k-means en el dataset &amp;ldquo;usa-cars&amp;rdquo;,&#xA;incluyendo la normalización de las variables.&#xA;Este código asume que el dataset tiene columnas&#xA;numéricas como price, mileage y year, que son&#xA;típicas en datasets de automóviles&lt;/p&gt;&#xA;&lt;h2 id=&#34;1-cargar-el-dataset&#34;&gt;1. Cargar el dataset&lt;/h2&gt;&#xA;&lt;h2 id=&#34;reemplaza-rutaalarchivousa-carscsv-con-la-ruta-real-de-tu-archivo&#34;&gt;Reemplaza &amp;ldquo;ruta/al/archivo/usa-cars.csv&amp;rdquo; con la ruta real de tu archivo&lt;/h2&gt;&#xA;&lt;p&gt;datos &amp;lt;- read.csv(&amp;ldquo;ruta/al/archivo/usa-cars.csv&amp;rdquo;)&lt;/p&gt;&#xA;&lt;h2 id=&#34;2-seleccionar-las-variables-numéricas-para-el-clustering&#34;&gt;2. Seleccionar las variables numéricas para el clustering&lt;/h2&gt;&#xA;&lt;h2 id=&#34;aquí-seleccionamos-price-mileage-y-year-modifica-según-tu-dataset&#34;&gt;Aquí seleccionamos &amp;lsquo;price&amp;rsquo;, &amp;lsquo;mileage&amp;rsquo; y &amp;lsquo;year&amp;rsquo;; modifica según tu dataset&lt;/h2&gt;&#xA;&lt;p&gt;variables_cluster &amp;lt;- datos[, c(&amp;ldquo;price&amp;rdquo;, &amp;ldquo;mileage&amp;rdquo;, &amp;ldquo;year&amp;rdquo;)]&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Another Note on A blogdown Tutorial</title>
+      <link>http://localhost:4321/note/2017/06/14/another-note/</link>
+      <pubDate>Wed, 14 Jun 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/note/2017/06/14/another-note/</guid>
+      <description>&lt;p&gt;I just discovered &lt;a href=&#34;https://www.apreshill.com/blog/2020-12-new-year-new-blogdown/&#34;&gt;an awesome tutorial&lt;/a&gt; on &lt;strong&gt;blogdown&lt;/strong&gt; written by Alison. I have to admit this is &lt;em&gt;the&lt;/em&gt; best &lt;strong&gt;blogdown&lt;/strong&gt; tutorial I have seen so far.&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://www.apreshill.com/blog/2020-12-new-year-new-blogdown/03-blogdown-2021.png&#34; alt=&#34;Alison&amp;rsquo;s blogdown tutorial&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>A Quick Note on Two Beautiful Websites</title>
+      <link>http://localhost:4321/note/2017/06/13/a-quick-note/</link>
+      <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/note/2017/06/13/a-quick-note/</guid>
+      <description>&lt;p&gt;To me, the two most impressive websites based on &lt;strong&gt;blogdown&lt;/strong&gt; are:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://robjhyndman.com&#34;&gt;Rob J Hyndman&lt;/a&gt;&amp;rsquo;s personal website.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://livefreeordichotomize.com&#34;&gt;Live Free or Dichotomize&lt;/a&gt; by Lucy and Nick &lt;em&gt;et al&lt;/em&gt;.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;I&amp;rsquo;m sure there will be more.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cluster3 | Dr.Cruz</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/post/">Post</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/post/2025/02/21/cluster1">Clusters</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Cluster3</span></h1>
+<h2 class="author">Dr.Cruz</h2>
+<h2 class="date">2025/02/21</h2>
+</div>
+
+<main>
+<p>código completo en R para realizar un análisis
+de cluster por k-means en el dataset &ldquo;usa-cars&rdquo;,
+incluyendo la normalización de las variables.
+Este código asume que el dataset tiene columnas
+numéricas como price, mileage y year, que son
+típicas en datasets de automóviles</p>
+<h2 id="1-cargar-el-dataset">1. Cargar el dataset</h2>
+<h2 id="reemplaza-rutaalarchivousa-carscsv-con-la-ruta-real-de-tu-archivo">Reemplaza &ldquo;ruta/al/archivo/usa-cars.csv&rdquo; con la ruta real de tu archivo</h2>
+<p>datos &lt;- read.csv(&ldquo;ruta/al/archivo/usa-cars.csv&rdquo;)</p>
+<h2 id="2-seleccionar-las-variables-numéricas-para-el-clustering">2. Seleccionar las variables numéricas para el clustering</h2>
+<h2 id="aquí-seleccionamos-price-mileage-y-year-modifica-según-tu-dataset">Aquí seleccionamos &lsquo;price&rsquo;, &lsquo;mileage&rsquo; y &lsquo;year&rsquo;; modifica según tu dataset</h2>
+<p>variables_cluster &lt;- datos[, c(&ldquo;price&rdquo;, &ldquo;mileage&rdquo;, &ldquo;year&rdquo;)]</p>
+<h2 id="3-normalizar-las-variables">3. Normalizar las variables</h2>
+<h2 id="usamos-scale-para-estandarizar-las-variables-media-0-desviación-estándar-1">Usamos scale() para estandarizar las variables (media 0, desviación estándar 1)</h2>
+<p>variables_normalizadas &lt;- scale(variables_cluster)</p>
+<h2 id="4-método-del-codo-para-determinar-el-número-óptimo-de-clusters">4. Método del codo para determinar el número óptimo de clusters</h2>
+<p>set.seed(123)  ## Para reproducibilidad
+wcss &lt;- vector()</p>
+<h2 id="vector-para-almacenar-la-suma-de-cuadrados-dentro-de-los-clusters">Vector para almacenar la suma de cuadrados dentro de los clusters</h2>
+<p>for (i in 1:10) {
+kmeans_model &lt;- kmeans(variables_normalizadas, centers = i, nstart = 10)
+wcss[i] &lt;- kmeans_model$tot.withinss
+}</p>
+<h2 id="graficar-el-método-del-codo">Graficar el método del codo</h2>
+<p>plot(1:10, wcss, type = &ldquo;b&rdquo;, pch = 19, frame = FALSE,
+xlab = &ldquo;Número de clusters&rdquo;, ylab = &ldquo;WCSS (Within-Cluster Sum of Squares)&rdquo;)</p>
+<h2 id="5-aplicar-k-means-suponiendo-que-3-clusters-es-el-número-óptimo">5. Aplicar k-means (suponiendo que 3 clusters es el número óptimo)</h2>
+<p>set.seed(123)  ## Para reproducibilidad
+kmeans_result &lt;- kmeans(variables_normalizadas, centers = 3, nstart = 25)</p>
+<h2 id="6-visualizar-los-clusters-usando-pca">6. Visualizar los clusters usando PCA</h2>
+<h2 id="realizamos-un-análisis-de-componentes-principales-pca-para-graficar">Realizamos un análisis de componentes principales (PCA) para graficar</h2>
+<p>pca_result &lt;- prcomp(variables_normalizadas, scale. = FALSE)
+plot(pca_result$x[,1], pca_result$x[,2], col = kmeans_result$cluster,
+pch = 19, xlab = &ldquo;Componente Principal 1&rdquo;, ylab = &ldquo;Componente Principal 2&rdquo;)
+points(kmeans_result$centers %*% pca_result$rotation[,1:2], col = 1:3, pch = 3, cex = 2)</p>
+<h2 id="7-mostrar-los-centroides-de-los-clusters">7. Mostrar los centroides de los clusters</h2>
+<p>print(kmeans_result$centers)</p>
+<h2 id="8-agregar-la-asignación-de-clusters-al-dataset-original">8. Agregar la asignación de clusters al dataset original</h2>
+<p>datos$cluster &lt;- kmeans_result$cluster</p>
+
+</main>
+
+  <footer>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/math-code.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/katex.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/render-katex.js" defer></script>
+
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js" defer></script>
+
+  
+  <hr/>
+  © <a href="https://yihui.org">Dr. Victor Cruz</a> 2024 &ndash; 2025 | <a href="https://github.com/yihui">Github</a> | <a href="https://twitter.com/xieyihui">Twitter</a>
+  
+  </footer>
+  </body>
+</html>
+

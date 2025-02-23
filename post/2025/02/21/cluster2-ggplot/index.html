@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cluster2-ggplot | Dr.Cruz</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/post/">Post</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/post/2025/02/21/cluster1">Clusters</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Cluster2-ggplot</span></h1>
+<h2 class="author">Dr. Victor Cruz</h2>
+<h2 class="date">2025/02/21</h2>
+</div>
+
+<main>
+<h2 id="cargar-las-librerías-necesarias">Cargar las librerías necesarias</h2>
+<pre><code class="language-r">suppressWarnings(suppressMessages(library(dplyr)))
+suppressWarnings(suppressMessages(library(factoextra)))
+library(dplyr)
+library(ggplot2)
+library(scales)
+library(factoextra)
+</code></pre>
+<h2 id="cargar-el-archivo-csv">Cargar el archivo CSV</h2>
+<pre><code class="language-r">data &lt;- read.csv(&quot;USA_cars_datasets.csv&quot;)
+</code></pre>
+<h2 id="seleccionar-las-variables-numéricas-para-el-análisis-de-clúster">Seleccionar las variables numéricas para el análisis de clúster</h2>
+<pre><code class="language-r">datos &lt;- data %&gt;% select(price, year, mileage)
+</code></pre>
+<h2 id="eliminar-filas-con-ceros-en-price-mileage-o-year">Eliminar filas con ceros en Price, mileage o year</h2>
+<pre><code class="language-r">datos_filtrados &lt;- datos %&gt;%
+  filter(price &gt; 0, mileage &gt; 0, year &gt; 0, price &gt;= 2000, year &gt;= 2015)
+</code></pre>
+<h2 id="5-normalizar-las-variables">5. Normalizar las variables</h2>
+<h3 id="usamos-la-normalización-z-score-estandarización-para-que-las-variables">Usamos la normalización Z-score (estandarización) para que las variables</h3>
+<h3 id="tengan-media-0-y-desviación-estándar-1">tengan media 0 y desviación estándar 1.</h3>
+<pre><code class="language-r">datos_normalizados &lt;- scale(datos_filtrados) %&gt;% as.data.frame()
+</code></pre>
+<h2 id="6-determinar-el-número-óptimo-de-clústeres">6. Determinar el número óptimo de clústeres</h2>
+<pre><code class="language-r">set.seed(123)
+wcss &lt;- numeric(10)
+for (k in 1:10) {
+  kmeans_model &lt;- kmeans(datos_normalizados, centers = k, nstart = 10)
+  wcss[k] &lt;- kmeans_model$tot.withinss
+}
+</code></pre>
+<h2 id="70gráfico-del-codo">7.0Gráfico del codo</h2>
+<pre><code class="language-r">ggplot(data.frame(K = 1:10, WCSS = wcss), aes(K, WCSS)) +
+  geom_line(color = &quot;steelblue&quot;) +
+  geom_point(size = 3) +
+  labs(title = &quot;Método del Codo&quot;, x = &quot;Número de clústeres (K)&quot;, y = &quot;WCSS&quot;) +
+  theme_minimal()
+</code></pre>
+<img src="/post/2025/02/21/cluster2-ggplot/index_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+<h2 id="8-aplicar-k-means-k3">8. Aplicar K-Means (K=3)</h2>
+<pre><code class="language-r">set.seed(42)
+kmeans_model &lt;- kmeans(datos_normalizados, centers = 3, nstart = 20)
+datos_filtrados$Cluster &lt;- as.factor(kmeans_model$cluster)
+head(datos_filtrados)
+</code></pre>
+<pre><code>##   price year mileage Cluster
+## 1  5350 2018   39590       3
+## 2 27700 2018    6654       1
+## 3  5700 2018   45561       3
+## 4 13350 2017   23525       3
+## 5 14600 2018    9371       3
+## 6  5250 2017   63418       2
+</code></pre>
+<h2 id="estadisticas-por-cluster">Estadisticas por Cluster</h2>
+<pre><code class="language-r">cluster_stats &lt;- datos_filtrados %&gt;%
+  group_by(Cluster) %&gt;%
+  summarise(
+    median_Price = median(price),
+    median_Mileage = median(mileage),
+    median_Year = median(year),
+    Count = n()
+  )
+
+print(cluster_stats)  # MUY IMPORTANTE RESUMEN POR cLUSTER
+</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   Cluster median_Price median_Mileage median_Year Count
+##   &lt;fct&gt;          &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt; &lt;int&gt;
+## 1 1              32200         20034         2019   541
+## 2 2              13871         68060.        2016   488
+## 3 3              16100         30350         2019  1072
+</code></pre>
+
+</main>
+
+  <footer>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/math-code.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/katex.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/render-katex.js" defer></script>
+
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js" defer></script>
+
+  
+  <hr/>
+  © <a href="https://yihui.org">Dr. Victor Cruz</a> 2024 &ndash; 2025 | <a href="https://github.com/yihui">Github</a> | <a href="https://twitter.com/xieyihui">Twitter</a>
+  
+  </footer>
+  </body>
+</html>
+

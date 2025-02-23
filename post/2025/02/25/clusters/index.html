@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clusters | Dr.Cruz</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/post/">Post</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/post/2025/02/21/cluster1">Clusters</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Clusters</span></h1>
+
+<h2 class="date">2025/02/25</h2>
+</div>
+
+<main>
+<h2 id="font-colorf81707codigo-okfont"><font color="#F81707">Codigo OK</font></h2>
+<pre><code class="language-r">suppressWarnings(suppressMessages(library(dplyr)))
+suppressWarnings(suppressMessages(library(factoextra)))
+suppressWarnings(suppressMessages(library(DT)))
+library(dplyr)
+library(factoextra)
+# library(DT)
+</code></pre>
+<h2 id="font-color3ded1arealizar-el-clustering-con-k-means-cargar-el-dataset-font"><font color="#3DED1A">Realizar el clustering con k-means Cargar el dataset </font></h2>
+<pre><code class="language-r">data &lt;- read.csv(&quot;USA_cars_datasets.csv&quot;)
+</code></pre>
+<h3 id="font-color3ded1aseleccionar-variables-numéricas-para-el-clustering-font"><font color="#3DED1A">Seleccionar variables numéricas para el clustering </font></h3>
+<p>las columnas relevantes son &lsquo;price&rsquo;, &lsquo;mileage&rsquo;, &lsquo;year&rsquo;, etc.</p>
+<pre><code class="language-r">data_num &lt;- data[, c(&quot;price&quot;, &quot;mileage&quot;, &quot;year&quot;)] 
+</code></pre>
+<h2 id="font-color3ded1aeliminar-filas-con-ceros-en-price-mileage-o-yearfont"><font color="#3DED1A">Eliminar filas con ceros en Price, mileage o year</font></h2>
+<pre><code class="language-r">datos_filtrados &lt;- data_num  %&gt;%
+  filter(price &gt; 0, mileage &gt; 0, year &gt; 0,
+         price &gt;= 2000, year &gt;= 2015, price &lt; 60000,
+         mileage &lt; 150000)
+</code></pre>
+<h3 id="font-color3ded1anormalizar-las-variables-restar-la-media-y-dividir-por-la-desviación-estándarfont"><font color="#3DED1A">Normalizar las variables (restar la media y dividir por la desviación estándar)</font></h3>
+<pre><code class="language-r">data_scaled &lt;- scale(datos_filtrados)
+</code></pre>
+<h2 id="font-color3ded1adeterminar-el-número-óptimo-de-clusters-con-el-método-del-codofont"><font color="#3DED1A">Determinar el número óptimo de clusters con el método del codo</font></h2>
+<pre><code class="language-r">fviz_nbclust(data_scaled, kmeans, method = &quot;wss&quot;) +
+  labs(title = &quot;Método del Codo para Determinar k&quot;)
+</code></pre>
+<img src="/post/2025/02/25/clusters/index_files/figure-html/grafica-1.png" width="672" />
+<h2 id="font-color3ded1asupongamos-que-elegimos-k--3-después-de-ver-la-gráfica-del-codofont"><font color="#3DED1A">Supongamos que elegimos k = 3 después de ver la gráfica del codo</font></h2>
+<pre><code class="language-r">set.seed(123)  # Para reproducibilidad
+km &lt;- kmeans(data_scaled, centers = 3, nstart = 25)
+                    # nstart mejora la estabilidad
+</code></pre>
+<h2 id="font-color3ded1avisualizar-los-clusters-con-factoextrafont"><font color="#3DED1A">Visualizar los clusters con factoextra</font></h2>
+<pre><code class="language-r">fviz_cluster(km, data = data_scaled, geom = &quot;point&quot;, 
+             main = &quot;Clusters de K-means con PCA&quot;) +
+  theme_minimal()
+</code></pre>
+<img src="/post/2025/02/25/clusters/index_files/figure-html/clusters-1.png" width="672" />
+<h2 id="font-color3ded1aestadisticas-por-clustefont"><font color="#3DED1A">Estadisticas por Cluste</font></h2>
+<pre><code class="language-r">datos_filtrados &lt;- as.data.frame(datos_filtrados)
+</code></pre>
+<pre><code class="language-r">datos_filtrados$Cluster &lt;- km$cluster
+head(datos_filtrados)
+</code></pre>
+<pre><code>##   price mileage year Cluster
+## 1  5350   39590 2018       2
+## 2 27700    6654 2018       3
+## 3  5700   45561 2018       2
+## 4 13350   23525 2017       2
+## 5 14600    9371 2018       2
+## 6  5250   63418 2017       1
+</code></pre>
+<pre><code class="language-r">#datatable(datos_filtrados, rownames = FALSE, options = list( pageLength = 5  ))
+</code></pre>
+<h2 id="análisis-de-los-clusters">Análisis de los clusters</h2>
+<h3 id="a-tamaño-de-los-clusters">a) Tamaño de los clusters</h3>
+<h2 id="calcular-la-media-de-price-mileage-y-year-para-cada-cluster">Calcular la media de price, mileage y year para cada cluster</h2>
+<pre><code class="language-r">cluster_profiles &lt;- datos_filtrados %&gt;%
+  group_by(Cluster) %&gt;%
+  summarise(
+    median_price = median(price),
+    median_mileage = median(mileage),
+    median_year = median(year),
+    n = n() # Número de elementos en cada cluster
+  )
+head(cluster_profiles)
+</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   Cluster median_price median_mileage median_year     n
+##     &lt;int&gt;        &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt; &lt;int&gt;
+## 1       1        13995         69004         2016   473
+## 2       2        15000         31992         2019   881
+## 3       3        29200         19852.        2019   728
+</code></pre>
+<pre><code class="language-r">#datatable(cluster_profiles, rownames = FALSE)
+</code></pre>
+<h2 id="interpretación-de-los-cluster">Interpretación de los cluster</h2>
+<p><strong>Cluster 1</strong> (Económicos y Más Antiguos): Precio promedio más bajo (15500), kilometraje más alto (55000), año promedio más antiguo (2016). En centroides normalizados: precio muy por debajo de la media global, kilometraje muy por encima de la media global, año muy por debajo de la media global. Representa coches más económicos, con más uso y más antiguos (dentro del rango filtrado).</p>
+<p><strong>Cluster 2</strong> (Gama Alta y Nuevos): Precio promedio más alto (35000), kilometraje más bajo (25000), año promedio más nuevo (2019). En centroides normalizados: precio muy por encima de la media global, kilometraje muy por debajo de la media global, año muy por encima de la media global. Representa coches de gama alta, con poco uso y más recientes.</p>
+<p><strong>Cluster 3</strong> (Gama Media): Precio promedio intermedio (25000), kilometraje intermedio (40000), año promedio intermedio (2017). En centroides normalizados: valores cercanos a cero o ligeramente desviados, indicando que este cluster está cerca de la media global en las variables normalizadas. Representa coches de gama media, con uso y antigüedad moderados.</p>
+
+</main>
+
+  <footer>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/math-code.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/katex.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/render-katex.js" defer></script>
+
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js" defer></script>
+
+  
+  <hr/>
+  © <a href="https://yihui.org">Dr. Victor Cruz</a> 2024 &ndash; 2025 | <a href="https://github.com/yihui">Github</a> | <a href="https://twitter.com/xieyihui">Twitter</a>
+  
+  </footer>
+  </body>
+</html>
+

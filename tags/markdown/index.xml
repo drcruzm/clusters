@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Markdown on Dr.Cruz</title>
+    <link>http://localhost:4321/tags/markdown/</link>
+    <description>Recent content in Markdown on Dr.Cruz</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 23 Feb 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:4321/tags/markdown/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Videos </title>
+      <link>http://localhost:4321/note/2025/02/23/videos/</link>
+      <pubDate>Sun, 23 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/note/2025/02/23/videos/</guid>
+      <description>&lt;h2 id=&#34;videos-youtube&#34;&gt;Videos youtube&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=dQw4w9WgXcQ&#34;&gt;&lt;img src=&#34;https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg&#34; alt=&#34;Rick Astley - Never Gonna Give You Up&#34;&gt;&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=BEoGvTlJMyY&#34;&gt;&lt;img src=&#34;https://img.youtube.com/vi/BEoGvTlJMyY/0.jpg&#34; alt=&#34;Sabrina concert&#34;&gt;&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=y38qQRg3UDI&#34;&gt;&lt;img src=&#34;https://img.youtube.com/vi/y38qQRg3UDI/0.jpg&#34; alt=&#34;Dua Lipa concert&#34;&gt;&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Cluster3</title>
+      <link>http://localhost:4321/note/2025/02/21/cluster3/</link>
+      <pubDate>Fri, 21 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/note/2025/02/21/cluster3/</guid>
+      <description>&lt;p&gt;código completo en R para realizar un análisis&#xA;de cluster por k-means en el dataset &amp;ldquo;usa-cars&amp;rdquo;,&#xA;incluyendo la normalización de las variables.&#xA;Este código asume que el dataset tiene columnas&#xA;numéricas como price, mileage y year, que son&#xA;típicas en datasets de automóviles&lt;/p&gt;&#xA;&lt;h2 id=&#34;1-cargar-el-dataset&#34;&gt;1. Cargar el dataset&lt;/h2&gt;&#xA;&lt;h2 id=&#34;reemplaza-rutaalarchivousa-carscsv-con-la-ruta-real-de-tu-archivo&#34;&gt;Reemplaza &amp;ldquo;ruta/al/archivo/usa-cars.csv&amp;rdquo; con la ruta real de tu archivo&lt;/h2&gt;&#xA;&lt;p&gt;datos &amp;lt;- read.csv(&amp;ldquo;ruta/al/archivo/usa-cars.csv&amp;rdquo;)&lt;/p&gt;&#xA;&lt;h2 id=&#34;2-seleccionar-las-variables-numéricas-para-el-clustering&#34;&gt;2. Seleccionar las variables numéricas para el clustering&lt;/h2&gt;&#xA;&lt;h2 id=&#34;aquí-seleccionamos-price-mileage-y-year-modifica-según-tu-dataset&#34;&gt;Aquí seleccionamos &amp;lsquo;price&amp;rsquo;, &amp;lsquo;mileage&amp;rsquo; y &amp;lsquo;year&amp;rsquo;; modifica según tu dataset&lt;/h2&gt;&#xA;&lt;p&gt;variables_cluster &amp;lt;- datos[, c(&amp;ldquo;price&amp;rdquo;, &amp;ldquo;mileage&amp;rdquo;, &amp;ldquo;year&amp;rdquo;)]&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Markdown Post</title>
+      <link>http://localhost:4321/post/2016/02/14/markdown-post/</link>
+      <pubDate>Sun, 14 Feb 2016 00:00:00 +0000</pubDate>
+      <guid>http://localhost:4321/post/2016/02/14/markdown-post/</guid>
+      <description>&lt;p&gt;This sample post is mainly for&#xA;&lt;a href=&#34;https://github.com/rstudio/blogdown&#34;&gt;&lt;strong&gt;blogdown&lt;/strong&gt;&lt;/a&gt; users. If you do not use&#xA;&lt;strong&gt;blogdown&lt;/strong&gt;, you can skip the first section.&lt;/p&gt;&#xA;&lt;h1 id=&#34;1-markdown-or-r-markdown&#34;&gt;1. Markdown or R Markdown&lt;/h1&gt;&#xA;&lt;p&gt;This is a post written in plain Markdown (&lt;code&gt;*.md&lt;/code&gt;) instead of R Markdown&#xA;(&lt;code&gt;*.Rmd&lt;/code&gt;). The major differences are:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;You cannot run any R code in a plain Markdown document, whereas in an R&#xA;Markdown document, you can embed R code chunks (&lt;code&gt;```{r}&lt;/code&gt;);&lt;/li&gt;&#xA;&lt;li&gt;A plain Markdown post is rendered through&#xA;&lt;a href=&#34;https://gohugo.io/overview/configuration/&#34;&gt;Goldmark&lt;/a&gt; by default, and an R&#xA;Markdown document is compiled by&#xA;&lt;a href=&#34;http://rmarkdown.rstudio.com&#34;&gt;&lt;strong&gt;rmarkdown&lt;/strong&gt;&lt;/a&gt; and&#xA;&lt;a href=&#34;http://pandoc.org&#34;&gt;Pandoc&lt;/a&gt;.&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;When creating a new post, you have to decide whether the post format is Markdown&#xA;or R Markdown, and this can be done via the &lt;code&gt;rmd&lt;/code&gt; argument of the function&#xA;&lt;code&gt;blogdown::new_post()&lt;/code&gt;, e.g.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

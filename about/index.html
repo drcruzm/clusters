@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=4321&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About Hugo XMin | Dr.Cruz</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">Home</a></li>
+      
+      <li><a href="/post/">Post</a></li>
+      
+      <li><a href="/categories/">Categories</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/post/2025/02/21/cluster1">Clusters</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">About Hugo XMin</span></h1>
+
+
+</div>
+
+<main>
+<p>I was writing the
+<a href="https://github.com/rstudio/blogdown"><strong>blogdown</strong></a> book.</p>
+<h2 id="hugoyaml-the-config-file"><code>hugo.yaml</code> (the config file)</h2>
+<p>For this example site, I defined permalinks for two sections, <code>post</code> and <code>note</code>, so that the links to pages under these directories will contain the date info, e.g., <code>https://xmin.yihui.org/post/2016/02/14/a-plain-markdown-post/</code>. This is optional, and it is up to your personal taste of URLs.</p>
+<pre><code class="language-yaml">permalinks:
+  note: &quot;/note/:year/:month/:day/:slug/&quot;
+  post: &quot;/post/:year/:month/:day/:slug/&quot;
+</code></pre>
+<p>You can define the menu through <code>menu.main</code>, e.g.,</p>
+<pre><code class="language-yaml">menu:
+  main:
+    - name: Home
+      url: &quot;&quot;
+      weight: 1
+    - name: About
+      url: &quot;about/&quot;
+      weight: 2
+    - name: Categories
+      url: &quot;categories/&quot;
+      weight: 3
+    - name: Tags
+      url: &quot;tags/&quot;
+      weight: 4
+    - name: Subscribe
+      url: &quot;index.xml&quot;
+</code></pre>
+<p>Alternatively, you can add <code>menu: main</code> to the YAML metadata of any of your pages, so that these pages will appear in the menu.</p>
+<p>The page footer can be defined in <code>.Params.footer</code>, and the text is treated as Markdown, e.g.,</p>
+<pre><code>params:
+  footer: &quot;&amp;copy; [Yihui Xie](https://yihui.org) 2017 -- {Year}&quot;
+</code></pre>
+<p>Here <code>{Year}</code> means the year in which the site is built (usually the current year).</p>
+<h2 id="custom-layouts">Custom layouts</h2>
+<p>There are two layout files under <code>layouts/partials/</code> that you may want to override: <code>head_custom.html</code> and <code>foot_custom.html</code>. This is how you inject arbitrary HTML code to the head and foot areas. For example, this site has a file <code>layouts/partials/foot_custom.html</code> to support LaTeX math via KaTeX and center images automatically:</p>
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;//cdn.jsdelivr.net/npm/katex/dist/katex.min.css&quot;&gt;
+&lt;script src=&quot;//cdn.jsdelivr.net/combine/npm/katex/dist/katex.min.js,npm/katex/dist/contrib/auto-render.min.js,npm/@xiee/utils/js/render-katex.js&quot; defer&gt;&lt;/script&gt;
+
+&lt;script src=&quot;//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js&quot; defer&gt;&lt;/script&gt;
+</code></pre>
+<p>You can certainly enable highlight.js for syntax highlighting by yourself through <code>head_custom.html</code> and <code>foot_custom.html</code> if you want.</p>
+<p>If you do not like the default fonts (e.g., <code>Palatino</code>), you may provide your own <code>static/css/fonts.css</code> under the root directory of your website to override the <code>fonts.css</code> in the theme.</p>
+<h2 id="other-features">Other features</h2>
+<p>I could have added more features to this theme, but I decided not to, since I have no intention to make this theme feature-rich. However, I will teach you how. I have prepared several examples via pull requests at <a href="https://github.com/yihui/hugo-xmin/pulls">https://github.com/yihui/hugo-xmin/pulls</a>, so that you can see the implementations of these features when you check out the diffs in the pull requests. For example, you can:</p>
+<ul>
+<li>
+<p><a href="https://github.com/yihui/hugo-xmin/pull/3">Enable Google Analytics</a></p>
+</li>
+<li>
+<p><a href="https://github.com/yihui/hugo-xmin/pull/4">Enable Disqus comments</a></p>
+</li>
+<li>
+<p><a href="https://github.com/yihui/hugo-xmin/pull/5">Enable highlight.js for syntax highlighting of code blocks</a></p>
+</li>
+<li>
+<p><a href="https://github.com/yihui/hugo-xmin/pull/2">Display categories and tags on a page</a></p>
+</li>
+<li>
+<p><a href="https://github.com/yihui/hugo-xmin/pull/7">Add a table of contents</a></p>
+</li>
+<li>
+<p><a href="https://github.com/yihui/hugo-xmin/pull/6">Add a link in the footer of each page to &ldquo;Edit this page&rdquo; on Github</a></p>
+</li>
+</ul>
+<p>To fully understand these examples, you have to read <a href="https://bookdown.org/yihui/blogdown/templates.html">the section on Hugo templates</a> in the <strong>blogdown</strong> book.</p>
+
+</main>
+
+  <footer>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/math-code.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/katex.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js" defer></script>
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/render-katex.js" defer></script>
+
+<script src="//cdn.jsdelivr.net/npm/@xiee/utils/js/center-img.min.js" defer></script>
+
+  
+  <hr/>
+  © <a href="https://yihui.org">Dr. Victor Cruz</a> 2024 &ndash; 2025 | <a href="https://github.com/yihui">Github</a> | <a href="https://twitter.com/xieyihui">Twitter</a>
+  
+  </footer>
+  </body>
+</html>
+
